@@ -5,6 +5,7 @@ import { z } from "zod";
 import stoi from "./stoi";
 import { getEnvOrYaml, readEnvOrFile } from "./getEnvOrYaml";
 import { getRunMode } from "./runMode";
+import { build } from "@server/build";
 // type-only: offlineThresholds imports config, which imports this file
 import type { OfflineThresholds } from "@server/lib/offlineThresholds";
 
@@ -507,6 +508,10 @@ export const configSchema = z
         (data) => {
             const keys = Object.keys(data.domains || {});
             if (data.flags?.disable_config_managed_domains) {
+                return true;
+            }
+
+            if (build === "enterprise" || build === "saas") {
                 return true;
             }
 
